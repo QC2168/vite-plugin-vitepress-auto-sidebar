@@ -1,7 +1,7 @@
 {
   "name": "vite-plugin-vitepress-auto-sidebar",
   "type": "module",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "packageManager": "pnpm@7.25.1",
   "description": "",
   "author": "QC2168",
@@ -59,9 +59,15 @@
     "rimraf": "^3.0.2",
     "typescript": "*",
     "unbuild": "^0.8.11",
+    "vite": "^4.0.4",
+    "vitepress": "1.0.0-alpha.38",
     "vitest": "^0.23.4"
   },
   "dependencies": {
     "picocolors": "^1.0.0"
+  },
+  "peerDependencies": {
+    "vite": "^4.0.4",
+    "vitepress": "1.0.0-alpha.38"
   }
 }
