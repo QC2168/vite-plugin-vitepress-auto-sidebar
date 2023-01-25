@@ -12,7 +12,9 @@
     "url": "git+https://github.com/QC2168/vite-plugin-vitepress-auto-sidebar.git"
   },
   "bugs": "https://github.com/QC2168/vite-plugin-vitepress-auto-sidebar/issues",
-  "keywords": [],
+  "keywords": [
+    "vitepress"
+  ],
   "sideEffects": false,
   "exports": {
     ".": {
