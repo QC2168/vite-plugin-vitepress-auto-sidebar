@@ -1,0 +1,19 @@
+{
+  "name": "example",
+  "version": "1.0.0",
+  "description": "vite-plugin-vitepress-auto-sidebar demo",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vitepress dev docs",
+    "build": "vitepress build docs",
+    "preview": "vitepress preview docs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "vite-plugin-vitepress-auto-sidebar": "^1.0.1",
+    "vitepress": "1.0.0-alpha.40",
+    "vue": "^3.2.45"
+  }
+}
