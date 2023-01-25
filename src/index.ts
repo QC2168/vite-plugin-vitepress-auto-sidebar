@@ -73,20 +73,22 @@ function createSidebarMulti(
 function insertStr(source:string, start:number, newStr:string) {
   return source.slice(0, start) + newStr + source.slice(start);
 }
+
 function injectSidebar(
   source: string,
   data: DefaultTheme.SidebarMulti | DefaultTheme.SidebarGroup[]
 ) {
-  const themeConfigPosition = source.indexOf(
-    "{",
-    source.indexOf("themeConfig")
-  );
-  return insertStr(
-    source,
-    themeConfigPosition + 1,
-    `"sidebar": ${JSON.stringify(data)},`.replaceAll('"', '\\"')
-  );
-}
+    const themeConfigPosition = source.indexOf(
+      "{",
+      source.indexOf("themeConfig")
+    );
+    return insertStr(
+      source,
+      themeConfigPosition + 1,
+      `"sidebar": ${JSON.stringify(data)}${source[themeConfigPosition+1]!=='}'?',':''}`.replaceAll('"', '\\"')
+    );
+  }
+
 export interface SidebarPluginOptionType {
   ignoreList?: string[];
   path?: string;
