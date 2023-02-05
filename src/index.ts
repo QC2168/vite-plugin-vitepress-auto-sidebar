@@ -105,15 +105,16 @@ export default function VitePluginVitepressAutoSidebar(
         if (event !== "change") {
           touch();
           console.log(
-            c.bgGreen(" UPDATE "),
-            c.green(`${event} ${path}, update sidebar data...`)
+            c.bold(c.cyan("[auto-sidebar]")),
+            (`${event} ${path}`)
           );
+          console.log(c.bold(c.cyan("[auto-sidebar]")),("update sidebar..."),
+        );
         }
       });
     },
     transform(source: string, id: string) {
       if (/\/@siteData/.test(id)) {
-        console.log(c.bgGreen(" INFO "), c.green("Creating sidebar data"));
         const { ignoreList = [], path = "/docs" } = option;
         // 忽略扫描的文件
         const ignoreFolder = [
@@ -128,10 +129,7 @@ export default function VitePluginVitepressAutoSidebar(
         const data = createSidebarMulti(docsPath, ignoreFolder);
         // 插入数据
         const code = injectSidebar(source, data);
-        console.log(
-          c.bgGreen(" INFO "),
-          c.green("The sidebar data was successfully injected")
-        );
+        console.log(c.bold(c.cyan("[auto-sidebar]")),("injected sidebar data successfully"));
         return { code };
       }
     },
