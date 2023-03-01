@@ -50,6 +50,9 @@ function createSideBarItems(
       }
     } else {
       // is file
+      if (ignoreIndexItem && fname === "index.md") {
+        continue;
+      }
       const text = fname.replace(/\.md$/, "");
       const item: DefaultTheme.SidebarItem = {
         text,
