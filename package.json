@@ -13,7 +13,10 @@
   },
   "bugs": "https://github.com/QC2168/vite-plugin-vitepress-auto-sidebar/issues",
   "keywords": [
-    "vitepress"
+    "vitepress",
+    "vite",
+    "sidebar",
+    "auto-sidebar"
   ],
   "sideEffects": false,
   "exports": {
