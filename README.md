@@ -8,7 +8,7 @@ The vite plugin that automatically generates sidebar data by scanning directorie
 
 🤖 Listen globally for `*.md` files to automatically update sidebar data when they are added or deleted
 
-## 🪵 Usage
+## 🕯️ Usage
 
 install vite-plugin-vitepress-auto-sidebar
 ```bash
@@ -39,11 +39,18 @@ export default defineConfig({
 `pnpm run dev`
 
 ```
- INFO  Creating sidebar data
- INFO  The sidebar data was successfully injected
+ [auto-sidebar] injected sidebar data successfully
 ```
 
 > If you see the above message, it means the plugin is working properly, otherwise there may be a problem
+
+### 🛠️ Options
+
+| name            | description                                | type       | default |
+| --------------- | ------------------------------------------ | ---------- | ------- |
+| ignoreList      | ignore specified folder                    | `string[]` | `true`  |
+| path            | create scan path for the sidebar           | `string`   | `/docs` |
+| ignoreIndexItem | ignore the page sidebar with only index.md | `boolean`  | `false` |
 
 ## License
 
