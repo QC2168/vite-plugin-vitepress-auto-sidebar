@@ -64,13 +64,14 @@
     "rimraf": "^3.0.2",
     "typescript": "*",
     "unbuild": "^0.8.11",
-    "vite": "^4.0.4"
+    "vite": "^4.1.4",
+    "vitepress": "1.0.0-alpha.49"
   },
   "dependencies": {
     "picocolors": "^1.0.0"
   },
   "peerDependencies": {
     "vite": "^4.0.4",
-    "vitepress": "1.0.0-alpha.38"
+    "vitepress": "1.0.0-alpha.49"
   }
 }

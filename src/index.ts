@@ -65,7 +65,7 @@ function createSideBarGroups(
   targetPath: string,
   folder: string,
   option: SidebarPluginOptionType
-): DefaultTheme.SidebarGroup[] {
+): DefaultTheme.SidebarItem[] {
   return [
     {
       items: createSideBarItems(targetPath, option, folder),
@@ -84,11 +84,7 @@ function createSidebarMulti(
   );
 
   for (const k of node) {
-    const dirRootItem = createSideBarGroups(
-      path,
-      k,
-      option
-    ) as DefaultTheme.SidebarGroup[];
+    const dirRootItem = createSideBarGroups(path, k, option);
     data[`/${k}/`] = dirRootItem;
   }
 
@@ -96,7 +92,7 @@ function createSidebarMulti(
   if (ignoreIndexItem) {
     for (const i in data) {
       let obj = data[i];
-      obj = obj.filter((i) => i.items.length > 0);
+      obj = obj.filter((i) => i.items && i.items.length > 0);
       if (obj.length === 0) {
         Reflect.deleteProperty(data, i);
       }
@@ -110,10 +106,7 @@ function insertStr(source: string, start: number, newStr: string) {
   return source.slice(0, start) + newStr + source.slice(start);
 }
 
-function injectSidebar(
-  source: string,
-  data: DefaultTheme.SidebarMulti | DefaultTheme.SidebarGroup[]
-) {
+function injectSidebar(source: string, data: DefaultTheme.Sidebar) {
   const themeConfigPosition = source.indexOf(
     "{",
     source.indexOf("themeConfig")
