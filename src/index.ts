@@ -2,10 +2,14 @@ import { join } from "path";
 import { readdirSync, statSync, closeSync, openSync, utimesSync } from "fs";
 import c from "picocolors";
 import { type DefaultTheme } from "vitepress";
-import { type ViteDevServer } from "vite";
+import { type ViteDevServer, Logger } from "vite";
 import { SidebarPluginOptionType } from "./types";
 
 const configFile = join(process.cwd(), "docs/.vitepress/config.ts");
+
+function log(...info: string[]) {
+  console.log(c.bold(c.cyan("[auto-sidebar]")), ...info);
+}
 
 function touch() {
   const time = new Date();
@@ -133,8 +137,8 @@ export default function VitePluginVitepressAutoSidebar(
       fsWatcher.on("all", (event, path) => {
         if (event !== "change") {
           touch();
-          console.log(c.bold(c.cyan("[auto-sidebar]")), `${event} ${path}`);
-          console.log(c.bold(c.cyan("[auto-sidebar]")), "update sidebar...");
+          log(`${event} ${path}`);
+          log("update sidebar...");
         }
       });
     },
@@ -151,10 +155,7 @@ export default function VitePluginVitepressAutoSidebar(
         const data = createSidebarMulti(docsPath, option);
         // 插入数据
         const code = injectSidebar(source, data);
-        console.log(
-          c.bold(c.cyan("[auto-sidebar]")),
-          "injected sidebar data successfully"
-        );
+        log("injected sidebar data successfully");
         return { code };
       }
     },
