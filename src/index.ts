@@ -49,8 +49,8 @@ function createSideBarItems(
         });
       }
     } else {
-      // is file
-      if (ignoreIndexItem && fname === "index.md") {
+      // is filed
+      if (ignoreIndexItem && fname === "index.md" || /^-.*\.(md|MD)$/.test(fname)) {
         continue;
       }
       const text = fname.replace(/\.md$/, "");
