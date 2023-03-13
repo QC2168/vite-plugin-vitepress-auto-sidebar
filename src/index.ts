@@ -2,7 +2,7 @@ import { join } from "path";
 import { readdirSync, statSync, closeSync, openSync, utimesSync } from "fs";
 import c from "picocolors";
 import { type DefaultTheme } from "vitepress";
-import { type ViteDevServer, Logger } from "vite";
+import { type ViteDevServer } from "vite";
 import { SidebarPluginOptionType } from "./types";
 
 const configFile = join(process.cwd(), "docs/.vitepress/config.ts");
@@ -87,11 +87,10 @@ function createSidebarMulti(
   );
 
   for (const k of node) {
-    const dirRootItem = createSideBarGroups(path, k, option);
-    data[`/${k}/`] = dirRootItem;
+    data[`/${k}/`] = createSideBarGroups(path, k, option);
   }
 
-  // is ignore only index.md
+  // is ignored only index.md
   if (ignoreIndexItem) {
     for (const i in data) {
       let obj = data[i];
