@@ -5,13 +5,14 @@ import { type DefaultTheme } from "vitepress";
 import { type ViteDevServer } from "vite";
 import { SidebarPluginOptionType } from "./types";
 
-const configFile = join(process.cwd(), "docs/.vitepress/config.ts");
 
 function log(...info: string[]) {
   console.log(c.bold(c.cyan("[auto-sidebar]")), ...info);
 }
 
-function touch() {
+function touch(option: SidebarPluginOptionType) {
+
+  const configFile = join(process.cwd(), `${option.path ? option.path : 'docs'}/.vitepress/config.ts`);
   const time = new Date();
 
   try {
@@ -131,7 +132,7 @@ export default function VitePluginVitepressAutoSidebar(
       const fsWatcher = watcher.add("*.md");
       fsWatcher.on("all", (event, path) => {
         if (event !== "change") {
-          touch();
+          touch(option);
           log(`${event} ${path}`);
           log("update sidebar...");
         }
