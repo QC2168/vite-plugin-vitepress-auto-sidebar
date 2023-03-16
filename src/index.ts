@@ -10,9 +10,8 @@ function log(...info: string[]) {
   console.log(c.bold(c.cyan("[auto-sidebar]")), ...info);
 }
 
-function touch(option: SidebarPluginOptionType) {
-
-  const configFile = join(process.cwd(), `${option.path ? option.path : 'docs'}/.vitepress/config.ts`);
+function touch({path='docs'}: SidebarPluginOptionType) {
+  const configFile = join(process.cwd(), `${path}/.vitepress/config.ts`);
   const time = new Date();
 
   try {
