@@ -1,9 +1,14 @@
 import { join } from "path";
 import { readdirSync, statSync, closeSync, openSync, utimesSync, existsSync } from "fs";
 import c from "picocolors";
-import { type DefaultTheme } from "vitepress";
-import { type ViteDevServer } from "vite";
+import {type DefaultTheme, type SiteConfig} from "vitepress";
+import { type ViteDevServer} from "vite";
 import { SidebarPluginOptionType } from "./types";
+
+
+interface UserConfig {
+  vitepress: SiteConfig
+}
 
 let configFilePath = '';
 
@@ -104,24 +109,6 @@ function createSidebarMulti(
   return data;
 }
 
-function insertStr(source: string, start: number, newStr: string) {
-  return source.slice(0, start) + newStr + source.slice(start);
-}
-
-function injectSidebar(source: string, data: DefaultTheme.Sidebar) {
-  const themeConfigPosition = source.indexOf(
-    "{",
-    source.indexOf("themeConfig")
-  );
-  return insertStr(
-    source,
-    themeConfigPosition + 1,
-    `"sidebar": ${JSON.stringify(data)}${
-      source[themeConfigPosition + 1] !== "}" ? "," : ""
-    }`.replaceAll('"', '\\"')
-  );
-}
-
 export default function VitePluginVitepressAutoSidebar(
   option: SidebarPluginOptionType = {}
 ) {
@@ -137,27 +124,23 @@ export default function VitePluginVitepressAutoSidebar(
         }
       });
     },
-    transform(source: string, id: string) {
-      if (/\/@siteData/.test(id)) {
-        const { path = "/docs" } = option;
+    config(config:UserConfig){
+      const { path = "/docs" } = option;
 
-        // get config file path
-        const configPath = join(process.cwd(), `${path}/.vitepress`);
-        configFilePath = existsSync(join(configPath, 'config.ts')) ? join(configPath, 'config.ts') : join(configPath, 'config.js');
+      // get config file path
+      const configPath = join(process.cwd(), `${path}/.vitepress`);
+      configFilePath = existsSync(join(configPath, 'config.ts')) ? join(configPath, 'config.ts') : join(configPath, 'config.js');
 
-        // increment ignore item
-        const items = ["scripts", "components", "assets", ".vitepress"];
-        option.ignoreList
+      // increment ignore item
+      const items = ["scripts", "components", "assets", ".vitepress"];
+      option.ignoreList
           ? option.ignoreList.push(...items)
           : (option.ignoreList = items);
-        const docsPath = join(process.cwd(), path);
-        // 创建侧边栏对象
-        const data = createSidebarMulti(docsPath, option);
-        // 插入数据
-        const code = injectSidebar(source, data);
-        log("injected sidebar data successfully");
-        return { code };
-      }
-    },
+      const docsPath = join(process.cwd(), path);
+      // create sidebar data and insert
+      config.vitepress.site.themeConfig.sidebar = createSidebarMulti(docsPath, option);
+      log("injected sidebar data successfully");
+      return config;
+    }
   };
 }
