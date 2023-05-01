@@ -1,5 +1,5 @@
 import { join } from "path";
-import { readdirSync, statSync, closeSync, openSync, utimesSync, existsSync } from "fs";
+import { readdirSync, statSync } from "fs";
 import c from "picocolors";
 import {type DefaultTheme, type SiteConfig} from "vitepress";
 import { type ViteDevServer} from "vite";
@@ -11,20 +11,8 @@ interface UserConfig {
   vitepress: SiteConfig
 }
 
-let configFilePath = '';
-
 function log(...info: string[]) {
   console.log(c.bold(c.cyan("[auto-sidebar]")), ...info);
-}
-
-function touch() {
-  const time = new Date();
-
-  try {
-    utimesSync(configFilePath, time, time);
-  } catch (err) {
-    closeSync(openSync(configFilePath, "w"));
-  }
 }
 
 function createSideBarItems(
@@ -112,11 +100,11 @@ export default function VitePluginVitepressAutoSidebar(
 ) {
   return {
     name: "vite-plugin-vitepress-auto-sidebar",
-    configureServer({ watcher }: ViteDevServer) {
+    configureServer({ watcher, restart}: ViteDevServer) {
       const fsWatcher = watcher.add("*.md");
       fsWatcher.on("all", (event, path) => {
         if (event !== "change") {
-          touch();
+          restart()
           log(`${event} ${path}`);
           log("update sidebar...");
         }
@@ -125,10 +113,6 @@ export default function VitePluginVitepressAutoSidebar(
     config(config:UserConfig){
       option = opt;
       const { path = "/docs" } = option;
-
-      // get config file path
-      const configPath = join(process.cwd(), `${path}/.vitepress`);
-      configFilePath = existsSync(join(configPath, 'config.ts')) ? join(configPath, 'config.ts') : join(configPath, 'config.js');
 
       // increment ignore item
       const docsPath = join(process.cwd(), path);
