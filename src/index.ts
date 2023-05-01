@@ -95,7 +95,7 @@ function createSidebarMulti(
   return data;
 }
 
-export default function VitePluginVitepressAutoSidebar(
+export default function VitePluginVitePressAutoSidebar(
   opt: SidebarPluginOptionType = {}
 ) {
   return {
