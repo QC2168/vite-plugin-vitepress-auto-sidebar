@@ -5,7 +5,8 @@ import {type DefaultTheme, type SiteConfig} from "vitepress";
 import { type ViteDevServer} from "vite";
 import { SidebarPluginOptionType } from "./types";
 
-
+const DEFAULT_IGNORE_FOLDER = ["scripts", "components", "assets", ".vitepress"];
+let option:SidebarPluginOptionType;
 interface UserConfig {
   vitepress: SiteConfig
 }
@@ -28,7 +29,6 @@ function touch() {
 
 function createSideBarItems(
   targetPath: string,
-  option: SidebarPluginOptionType,
   ...reset: string[]
 ): DefaultTheme.SidebarItem[] {
   const { ignoreIndexItem } = option;
@@ -43,7 +43,6 @@ function createSideBarItems(
       // ignore cur node if items length is 0
       const items = createSideBarItems(
         join(targetPath),
-        option,
         ...reset,
         fname
       );
@@ -71,28 +70,27 @@ function createSideBarItems(
 
 function createSideBarGroups(
   targetPath: string,
-  folder: string,
-  option: SidebarPluginOptionType
+  folder: string
 ): DefaultTheme.SidebarItem[] {
   return [
     {
-      items: createSideBarItems(targetPath, option, folder),
+      items: createSideBarItems(targetPath, folder),
     },
   ];
 }
 
 function createSidebarMulti(
-  path: string,
-  option: SidebarPluginOptionType
+  path: string
 ): DefaultTheme.SidebarMulti {
   const { ignoreList = [], ignoreIndexItem = false } = option;
+  const il=[...DEFAULT_IGNORE_FOLDER,...ignoreList]
   const data: DefaultTheme.SidebarMulti = {};
   let node = readdirSync(path).filter(
-    (n) => statSync(join(path, n)).isDirectory() && !ignoreList.includes(n)
+    (n) => statSync(join(path, n)).isDirectory() && !il.includes(n)
   );
 
   for (const k of node) {
-    data[`/${k}/`] = createSideBarGroups(path, k, option);
+    data[`/${k}/`] = createSideBarGroups(path, k);
   }
 
   // is ignored only index.md
@@ -110,7 +108,7 @@ function createSidebarMulti(
 }
 
 export default function VitePluginVitepressAutoSidebar(
-  option: SidebarPluginOptionType = {}
+  opt: SidebarPluginOptionType = {}
 ) {
   return {
     name: "vite-plugin-vitepress-auto-sidebar",
@@ -125,6 +123,7 @@ export default function VitePluginVitepressAutoSidebar(
       });
     },
     config(config:UserConfig){
+      option = opt;
       const { path = "/docs" } = option;
 
       // get config file path
@@ -132,13 +131,9 @@ export default function VitePluginVitepressAutoSidebar(
       configFilePath = existsSync(join(configPath, 'config.ts')) ? join(configPath, 'config.ts') : join(configPath, 'config.js');
 
       // increment ignore item
-      const items = ["scripts", "components", "assets", ".vitepress"];
-      option.ignoreList
-          ? option.ignoreList.push(...items)
-          : (option.ignoreList = items);
       const docsPath = join(process.cwd(), path);
       // create sidebar data and insert
-      config.vitepress.site.themeConfig.sidebar = createSidebarMulti(docsPath, option);
+      config.vitepress.site.themeConfig.sidebar = createSidebarMulti(docsPath);
       log("injected sidebar data successfully");
       return config;
     }
