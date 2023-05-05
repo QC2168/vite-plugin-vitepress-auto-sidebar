@@ -12,8 +12,8 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "vite-plugin-vitepress-auto-sidebar": "^1.0.1",
-    "vitepress": "1.0.0-alpha.40",
+    "vite-plugin-vitepress-auto-sidebar": "../",
+    "vitepress": "latest",
     "vue": "^3.2.45"
   }
 }
