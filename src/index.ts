@@ -48,7 +48,7 @@ function createSideBarItems(
       const text = fname.replace(/\.md$/, "");
       const item: DefaultTheme.SidebarItem = {
         text,
-        link: [...reset, `${text}.html`].join("/"),
+        link: '/' + [...reset, `${text}.html`].join("/"),
       };
       result.push(item);
     }
