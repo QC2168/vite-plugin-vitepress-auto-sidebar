@@ -13,7 +13,7 @@ function createSideBarItems(
   targetPath: string,
   ...reset: string[]
 ): DefaultTheme.SidebarItem[] {
-  const { ignoreIndexItem, deletePrefix } = option;
+  const { ignoreIndexItem, deletePrefix, collapsed = false } = option;
   let node = readdirSync(join(targetPath, ...reset));
   if (ignoreIndexItem && node.length === 1 && node[0] === "index.md") {
     return [];
@@ -38,10 +38,8 @@ function createSideBarItems(
             text,
 			items,
 		}
-		// vitePress sideBar option collapsed
-		if (option?.collapsed) {
-		   	sidebarItem.collapsed = option.collapsed
-		}
+		// vitePress sidebar option collapsed
+        sidebarItem.collapsed = collapsed
        	result.push(sidebarItem)
       }
     } else {

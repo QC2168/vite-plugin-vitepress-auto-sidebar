@@ -51,13 +51,13 @@ export default defineConfig({
 
 ### 🛠️ Options
 
-| name            | description                                                                                                                                        | type       | default |
-|-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------|------------|---------|
-| ignoreList      | ignore specified folder                                                                                                                            | `string[]` | `true`  |
-| path            | create scan path for the sidebar                                                                                                                   | `string`   | `/docs` |
-| ignoreIndexItem | ignore the page sidebar with only index.md                                                                                                         | `boolean`  | `false` |
-| collapsed       | By adding collapsed option to the sidebar group, it shows a toggle button to hide/show each section,For specific usage, please refer to VitePress. | `boolean`  | `false` |
-| deletePrefix    | deletes the md file prefix                                                                                                                         | `string`   |         |
+| name            | description                                                                                                                                       | type       | default |
+|-----------------|---------------------------------------------------------------------------------------------------------------------------------------------------|------------|---------|
+| ignoreList      | ignore specified folder                                                                                                                           | `string[]` | `true`  |
+| path            | create scan path for the sidebar                                                                                                                  | `string`   | `/docs` |
+| ignoreIndexItem | ignore the page sidebar with only index.md                                                                                                        | `boolean`  | `false` |
+| collapsed       | By adding collapsed option to the sidebar group, it shows a toggle button to hide/show each section,For specific usage, please refer to VitePress | `boolean`  | `false` |
+| deletePrefix    | deletes the md file prefix                                                                                                                        | `string`   |         |
 
 ## License
 
