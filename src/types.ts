@@ -3,6 +3,6 @@ export interface SidebarPluginOptionType {
     path?: string;
     createIndex?: boolean;
     ignoreIndexItem?: boolean;
-	prefix?:string;
+    deletePrefix?:string;
 	collapsed?:boolean;
   }

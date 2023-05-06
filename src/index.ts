@@ -29,7 +29,7 @@ function createSideBarItems(
   targetPath: string,
   ...reset: string[]
 ): DefaultTheme.SidebarItem[] {
-  const { ignoreIndexItem } = option;
+  const { ignoreIndexItem, deletePrefix } = option;
   let node = readdirSync(join(targetPath, ...reset));
   if (ignoreIndexItem && node.length === 1 && node[0] === "index.md") {
     return [];
@@ -44,18 +44,19 @@ function createSideBarItems(
         ...reset,
         fname
       );
+      // delete folder prefix
 	  let text = fname
-	  if (option.prefix) {
-	    text = removePrefix(text, option.prefix) 
+	  if (deletePrefix) {
+	    text = removePrefix(text, deletePrefix)
 	  }
       if (items.length > 0) {
 		const sidebarItem: DefaultTheme.SidebarItem = {
-			text, 
-			items, 
+            text,
+			items,
 		}
-		// vitePress siderBar option collapsed
-		if (Reflect.has(option, 'collapsed')) {
-		   	sidebarItem.collapsed = Reflect.get(option, 'collapsed')
+		// vitePress sideBar option collapsed
+		if (option?.collapsed) {
+		   	sidebarItem.collapsed = option.collapsed
 		}
        	result.push(sidebarItem)
       }
@@ -64,10 +65,10 @@ function createSideBarItems(
       if (ignoreIndexItem && fname === "index.md" || /^-.*\.(md|MD)$/.test(fname)) {
         continue;
       }
-      let fileName = fname.replace(/\.md$/, '') 
-      let text = fileName 
-      if (option.prefix) {
-        text = removePrefix(text, option.prefix) 
+      let fileName = fname.replace(/\.md$/, '')
+      let text = fileName
+      if (deletePrefix) {
+        text = removePrefix(text, deletePrefix)
       }
 
       const item: DefaultTheme.SidebarItem = {

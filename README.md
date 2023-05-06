@@ -11,6 +11,7 @@ The vite plugin that automatically generates sidebar data by scanning directorie
 ## 🕯️ Usage
 
 install vite-plugin-vitepress-auto-sidebar
+
 ```bash
 # recommend using pnpm packageManager
 pnpm i vite-plugin-vitepress-auto-sidebar
@@ -24,13 +25,14 @@ add plugin in `.vitepress/config.ts`
 
 ```typescript
 import AutoSidebar from 'vite-plugin-vitepress-auto-sidebar';
+
 export default defineConfig({
-  vite:{
-    plugins:[
-      // add plugin
-      AutoSidebar()
-    ]
-  },
+    vite: {
+        plugins: [
+            // add plugin
+            AutoSidebar()
+        ]
+    },
 })
 ```
 
@@ -46,13 +48,13 @@ export default defineConfig({
 
 ### 🛠️ Options
 
-| name            | description                                | type       | default |
-| --------------- | ------------------------------------------ | ---------- | ------- |
-| ignoreList      | ignore specified folder                    | `string[]` | `true`  |
-| path            | create scan path for the sidebar           | `string`   | `/docs` |
-| ignoreIndexItem | ignore the page sidebar with only index.md | `boolean`  | `false` |
-| collapsed  | By adding collapsed option to the sidebar group, it shows a toggle button to hide/show each section,For specific usage, please refer to VitePress. | `boolean`\|`undefined`  | `undefined` |
-| prefix | secondary sort | `string`  |  |
+| name            | description                                                                                                                                        | type       | default |
+|-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------|------------|---------|
+| ignoreList      | ignore specified folder                                                                                                                            | `string[]` | `true`  |
+| path            | create scan path for the sidebar                                                                                                                   | `string`   | `/docs` |
+| ignoreIndexItem | ignore the page sidebar with only index.md                                                                                                         | `boolean`  | `false` |
+| collapsed       | By adding collapsed option to the sidebar group, it shows a toggle button to hide/show each section,For specific usage, please refer to VitePress. | `boolean`  | `false` |
+| deletePrefix    | deletes the md file prefix                                                                                                                         | `string`   |         |
 
 ## License
 
