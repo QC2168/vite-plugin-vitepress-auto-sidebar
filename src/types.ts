@@ -1,3 +1,5 @@
+import {SiteConfig} from "vitepress";
+
 export interface SidebarPluginOptionType {
     ignoreList?: string[];
     path?: string;
@@ -6,3 +8,7 @@ export interface SidebarPluginOptionType {
     deletePrefix?:string;
 	collapsed?:boolean;
   }
+
+export interface UserConfig {
+    vitepress: SiteConfig
+}

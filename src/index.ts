@@ -1,29 +1,13 @@
 import { join } from "path";
 import { readdirSync, statSync } from "fs";
-import c from "picocolors";
-import {type DefaultTheme, type SiteConfig} from "vitepress";
-import { type ViteDevServer} from "vite";
+import {type DefaultTheme } from "vitepress";
+import {type ViteDevServer} from "vite";
+import {type UserConfig} from './types'
 import { SidebarPluginOptionType } from "./types";
+import {DEFAULT_IGNORE_FOLDER, log, removePrefix} from "./utils";
 
-const DEFAULT_IGNORE_FOLDER = ["scripts", "components", "assets", ".vitepress"];
+
 let option:SidebarPluginOptionType;
-interface UserConfig {
-  vitepress: SiteConfig
-}
-
-function log(...info: string[]) {
-  console.log(c.bold(c.cyan("[auto-sidebar]")), ...info);
-}
-
-// remove the file prefix
-function removePrefix(str:string, identifier:string) {
-	const index = str.indexOf(identifier)
-	if (index === -1) {
-		return str
-	} else {
-		return str.slice(index + identifier.length)
-	}
-}
 
 function createSideBarItems(
   targetPath: string,
@@ -44,9 +28,9 @@ function createSideBarItems(
         ...reset,
         fname
       );
-      // delete folder prefix
+      // replace directory name, if yes
 	  let text = fname
-	  if (deletePrefix) {
+	  if (deletePrefix && fname.startsWith(deletePrefix)) {
 	    text = removePrefix(text, deletePrefix)
 	  }
       if (items.length > 0) {
