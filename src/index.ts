@@ -15,6 +15,16 @@ function log(...info: string[]) {
   console.log(c.bold(c.cyan("[auto-sidebar]")), ...info);
 }
 
+// remove the file prefix
+function removePrefix(str:string, identifier:string) {
+	const index = str.indexOf(identifier)
+	if (index === -1) {
+		return str
+	} else {
+		return str.slice(index + identifier.length)
+	}
+}
+
 function createSideBarItems(
   targetPath: string,
   ...reset: string[]
@@ -34,21 +44,35 @@ function createSideBarItems(
         ...reset,
         fname
       );
+	  let text = fname
+	  if (option.prefix) {
+	    text = removePrefix(text, option.prefix) 
+	  }
       if (items.length > 0) {
-        result.push({
-          text: fname,
-          items,
-        });
+		const sidebarItem: DefaultTheme.SidebarItem = {
+			text, 
+			items, 
+		}
+		// vitePress siderBar option collapsed
+		if (Reflect.has(option, 'collapsed')) {
+		   	sidebarItem.collapsed = Reflect.get(option, 'collapsed')
+		}
+       	result.push(sidebarItem)
       }
     } else {
       // is filed
       if (ignoreIndexItem && fname === "index.md" || /^-.*\.(md|MD)$/.test(fname)) {
         continue;
       }
-      const text = fname.replace(/\.md$/, "");
+      let fileName = fname.replace(/\.md$/, '') 
+      let text = fileName 
+      if (option.prefix) {
+        text = removePrefix(text, option.prefix) 
+      }
+
       const item: DefaultTheme.SidebarItem = {
         text,
-        link: '/' + [...reset, `${text}.html`].join("/"),
+        link: '/' + [...reset, `${fileName}.html`].join("/"),
       };
       result.push(item);
     }

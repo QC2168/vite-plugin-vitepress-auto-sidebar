@@ -51,6 +51,8 @@ export default defineConfig({
 | ignoreList      | ignore specified folder                    | `string[]` | `true`  |
 | path            | create scan path for the sidebar           | `string`   | `/docs` |
 | ignoreIndexItem | ignore the page sidebar with only index.md | `boolean`  | `false` |
+| collapsed  | By adding collapsed option to the sidebar group, it shows a toggle button to hide/show each section,For specific usage, please refer to VitePress. | `boolean`\|`undefined`  | `undefined` |
+| prefix | secondary sort | `string`  |  |
 
 ## License
 
