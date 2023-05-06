@@ -30,7 +30,10 @@ export default defineConfig({
     vite: {
         plugins: [
             // add plugin
-            AutoSidebar()
+            AutoSidebar({
+                // You can also set options to adjust sidebar data
+                // see option document below
+            })
         ]
     },
 })
