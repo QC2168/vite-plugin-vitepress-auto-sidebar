@@ -8,6 +8,6 @@ export default {
     plugins: [AutoSidebar({ prefix: '.', collapsed: false })],
   },
   themeConfig: {
-     nav: [{ text: "note", link: "/note/index" }],
+     nav: [{ text: "home", link: "/" },{ text: "note", link: "/note/index" }],
   },
 };
