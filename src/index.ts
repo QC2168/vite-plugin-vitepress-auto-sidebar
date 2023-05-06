@@ -1,21 +1,20 @@
-import { join } from "path";
-import { readdirSync, statSync } from "fs";
-import {type DefaultTheme } from "vitepress";
-import {type ViteDevServer} from "vite";
-import {type UserConfig} from './types'
-import { SidebarPluginOptionType } from "./types";
-import {DEFAULT_IGNORE_FOLDER, log, removePrefix} from "./utils";
+import { join } from 'path';
+import { readdirSync, statSync } from 'fs';
+import { type DefaultTheme } from 'vitepress';
+import { type Plugin, type ViteDevServer } from 'vite';
+import type { SidebarPluginOptionType, UserConfig } from './types';
 
+import { DEFAULT_IGNORE_FOLDER, log, removePrefix } from './utils';
 
-let option:SidebarPluginOptionType;
+let option: SidebarPluginOptionType;
 
-function createSideBarItems(
+function createSideBarItems (
   targetPath: string,
   ...reset: string[]
 ): DefaultTheme.SidebarItem[] {
   const { ignoreIndexItem, deletePrefix, collapsed = false } = option;
-  let node = readdirSync(join(targetPath, ...reset));
-  if (ignoreIndexItem && node.length === 1 && node[0] === "index.md") {
+  const node = readdirSync(join(targetPath, ...reset));
+  if (ignoreIndexItem && node.length === 1 && node[0] === 'index.md') {
     return [];
   }
   const result: DefaultTheme.SidebarItem[] = [];
@@ -29,33 +28,33 @@ function createSideBarItems(
         fname
       );
       // replace directory name, if yes
-	  let text = fname
-	  if (deletePrefix && fname.startsWith(deletePrefix)) {
-	    text = removePrefix(text, deletePrefix)
-	  }
+      let text = fname;
+      if (deletePrefix && fname.startsWith(deletePrefix)) {
+        text = removePrefix(text, deletePrefix);
+      }
       if (items.length > 0) {
-		const sidebarItem: DefaultTheme.SidebarItem = {
-            text,
-			items,
-		}
-		// vitePress sidebar option collapsed
-        sidebarItem.collapsed = collapsed
-       	result.push(sidebarItem)
+        const sidebarItem: DefaultTheme.SidebarItem = {
+          text,
+          items
+        };
+        // vitePress sidebar option collapsed
+        sidebarItem.collapsed = collapsed;
+        result.push(sidebarItem);
       }
     } else {
       // is filed
-      if (ignoreIndexItem && fname === "index.md" || /^-.*\.(md|MD)$/.test(fname)) {
+      if (ignoreIndexItem && fname === 'index.md' || /^-.*\.(md|MD)$/.test(fname)) {
         continue;
       }
-      let fileName = fname.replace(/\.md$/, '')
-      let text = fileName
+      const fileName = fname.replace(/\.md$/, '');
+      let text = fileName;
       if (deletePrefix) {
-        text = removePrefix(text, deletePrefix)
+        text = removePrefix(text, deletePrefix);
       }
 
       const item: DefaultTheme.SidebarItem = {
         text,
-        link: '/' + [...reset, `${fileName}.html`].join("/"),
+        link: '/' + [...reset, `${fileName}.html`].join('/')
       };
       result.push(item);
     }
@@ -63,24 +62,24 @@ function createSideBarItems(
   return result;
 }
 
-function createSideBarGroups(
+function createSideBarGroups (
   targetPath: string,
   folder: string
 ): DefaultTheme.SidebarItem[] {
   return [
     {
-      items: createSideBarItems(targetPath, folder),
-    },
+      items: createSideBarItems(targetPath, folder)
+    }
   ];
 }
 
-function createSidebarMulti(
+function createSidebarMulti (
   path: string
 ): DefaultTheme.SidebarMulti {
   const { ignoreList = [], ignoreIndexItem = false } = option;
-  const il=[...DEFAULT_IGNORE_FOLDER,...ignoreList]
+  const il = [...DEFAULT_IGNORE_FOLDER, ...ignoreList];
   const data: DefaultTheme.SidebarMulti = {};
-  let node = readdirSync(path).filter(
+  const node = readdirSync(path).filter(
     (n) => statSync(join(path, n)).isDirectory() && !il.includes(n)
   );
 
@@ -92,7 +91,7 @@ function createSidebarMulti(
   if (ignoreIndexItem) {
     for (const i in data) {
       let obj = data[i];
-      obj = obj.filter((i) => i.items && i.items.length > 0);
+      obj = obj.filter((i) => (i.items != null) && i.items.length > 0);
       if (obj.length === 0) {
         Reflect.deleteProperty(data, i);
       }
@@ -102,30 +101,34 @@ function createSidebarMulti(
   return data;
 }
 
-export default function VitePluginVitePressAutoSidebar(
+export default function VitePluginVitePressAutoSidebar (
   opt: SidebarPluginOptionType = {}
-) {
+): Plugin {
   return {
-    name: "vite-plugin-vitepress-auto-sidebar",
-    configureServer({ watcher, restart}: ViteDevServer) {
-      const fsWatcher = watcher.add("*.md");
-      fsWatcher.on("all", (event, path) => {
-        if (event !== "change") {
-          restart()
+    name: 'vite-plugin-vitepress-auto-sidebar',
+    configureServer ({ watcher, restart }: ViteDevServer) {
+      const fsWatcher = watcher.add('*.md');
+      fsWatcher.on('all', async (event, path) => {
+        if (event !== 'change') {
           log(`${event} ${path}`);
-          log("update sidebar...");
+          try {
+            await restart();
+            log('update sidebar...');
+          } catch {
+            log(`${event} ${path}`);
+            log('update sidebar failed');
+          }
         }
       });
     },
-    config(config:UserConfig){
+    config (config) {
       option = opt;
-      const { path = "/docs" } = option;
-
+      const { path = '/docs' } = option;
       // increment ignore item
       const docsPath = join(process.cwd(), path);
       // create sidebar data and insert
-      config.vitepress.site.themeConfig.sidebar = createSidebarMulti(docsPath);
-      log("injected sidebar data successfully");
+      (config as UserConfig).vitepress.site.themeConfig.sidebar = createSidebarMulti(docsPath);
+      log('injected sidebar data successfully');
       return config;
     }
   };

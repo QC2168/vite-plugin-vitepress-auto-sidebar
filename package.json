@@ -43,7 +43,7 @@
   "scripts": {
     "build": "unbuild",
     "dev": "unbuild --stub",
-    "lint": "eslint .",
+    "lint": "eslint --fix --ext .ts src/ ",
     "prepublishOnly": "pnpm build",
     "release": "bumpp && npm publish",
     "start": "esno src/index.ts",
