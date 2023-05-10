@@ -6,6 +6,6 @@ export function log (...info: string[]): void {
 }
 
 // remove the file prefix
-export function removePrefix (str: string, identifier: string): string {
+export function removePrefix (str: string, identifier: string | RegExp): string {
   return str.replace(identifier, '');
 }

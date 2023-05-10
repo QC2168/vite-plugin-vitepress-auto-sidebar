@@ -29,9 +29,11 @@ function createSideBarItems (
       );
       // replace directory name, if yes
       let text = fname;
-      if (deletePrefix && fname.startsWith(deletePrefix)) {
+
+      if (deletePrefix) {
         text = removePrefix(text, deletePrefix);
       }
+
       if (items.length > 0) {
         const sidebarItem: DefaultTheme.SidebarItem = {
           text,
