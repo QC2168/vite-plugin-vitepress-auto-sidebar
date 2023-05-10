@@ -2,6 +2,10 @@
 
 The vite plugin that automatically generates sidebar data by scanning directories, based on vitepress
 
+[![Npm](https://img.shields.io/npm/v/vite-plugin-vitepress-auto-sidebar)](http://blog.csdn.net/a_zhon)
+[![Download](https://img.shields.io/npm/dt/vite-plugin-vitepress-auto-sidebar)](http://blog.csdn.net/a_zhon)
+[![License](https://img.shields.io/github/license/qc2168/vite-plugin-vitepress-auto-sidebar)](http://blog.csdn.net/a_zhon)
+
 ## ✨ Feature
 
 🚀 Automatically create the sidebar data and injected into `config.ThemeConfig.sidebar`
