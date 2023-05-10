@@ -78,7 +78,7 @@ function createSideBarGroups (
 function createSidebarMulti (
   path: string
 ): DefaultTheme.SidebarMulti {
-  const { ignoreList = [], ignoreIndexItem = false } = option;
+  const { ignoreList = [], ignoreIndexItem = false, sideBarResolved } = option;
   const il = [...DEFAULT_IGNORE_FOLDER, ...ignoreList];
   const data: DefaultTheme.SidebarMulti = {};
   const node = readdirSync(path).filter(
@@ -100,7 +100,7 @@ function createSidebarMulti (
     }
   }
 
-  return data;
+  return sideBarResolved?.(data) ?? data;
 }
 
 export default function VitePluginVitePressAutoSidebar (
