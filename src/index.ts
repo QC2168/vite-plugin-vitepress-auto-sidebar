@@ -12,7 +12,7 @@ function createSideBarItems (
   targetPath: string,
   ...reset: string[]
 ): DefaultTheme.SidebarItem[] {
-  const { ignoreIndexItem, deletePrefix, collapsed = false } = option;
+  const { ignoreIndexItem, deletePrefix, collapsed = false, sideBarItemsResolved } = option;
   const node = readdirSync(join(targetPath, ...reset));
   if (ignoreIndexItem && node.length === 1 && node[0] === 'index.md') {
     return [];
@@ -61,7 +61,7 @@ function createSideBarItems (
       result.push(item);
     }
   }
-  return result;
+  return sideBarItemsResolved?.(result) ?? result;
 }
 
 function createSideBarGroups (

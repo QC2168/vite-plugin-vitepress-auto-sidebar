@@ -6,7 +6,8 @@ export interface SidebarPluginOptionType {
   ignoreIndexItem?: boolean
   deletePrefix?: string | RegExp
   collapsed?: boolean
-  sideBarResolved?: (data:DefaultTheme.SidebarMulti) => DefaultTheme.SidebarMulti
+  sideBarResolved?: (data: DefaultTheme.SidebarMulti) => DefaultTheme.SidebarMulti
+  sideBarItemsResolved?: (data: DefaultTheme.SidebarItem[]) => DefaultTheme.SidebarItem[]
 }
 export interface UserConfig {
   vitepress: SiteConfig
