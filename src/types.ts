@@ -8,6 +8,7 @@ export interface SidebarPluginOptionType {
   collapsed?: boolean
   sideBarResolved?: (data: DefaultTheme.SidebarMulti) => DefaultTheme.SidebarMulti
   sideBarItemsResolved?: (data: DefaultTheme.SidebarItem[]) => DefaultTheme.SidebarItem[]
+  beforeCreateSideBarItems?: (data: string[]) => string[]
 }
 export interface UserConfig {
   vitepress: SiteConfig

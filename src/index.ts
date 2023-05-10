@@ -12,8 +12,9 @@ function createSideBarItems (
   targetPath: string,
   ...reset: string[]
 ): DefaultTheme.SidebarItem[] {
-  const { ignoreIndexItem, deletePrefix, collapsed = false, sideBarItemsResolved } = option;
-  const node = readdirSync(join(targetPath, ...reset));
+  const { ignoreIndexItem, deletePrefix, collapsed = false, sideBarItemsResolved, beforeCreateSideBarItems } = option;
+  const rawNode = readdirSync(join(targetPath, ...reset));
+  const node = beforeCreateSideBarItems?.(rawNode) ?? rawNode;
   if (ignoreIndexItem && node.length === 1 && node[0] === 'index.md') {
     return [];
   }
