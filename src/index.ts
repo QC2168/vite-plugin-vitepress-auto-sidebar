@@ -12,7 +12,7 @@ function createSideBarItems (
   targetPath: string,
   ...reset: string[]
 ): DefaultTheme.SidebarItem[] {
-  const { ignoreIndexItem, deletePrefix, collapsed = false, sideBarItemsResolved, beforeCreateSideBarItems } = option;
+  const { ignoreIndexItem, deletePrefix, collapsed = false, sideBarItemsResolved, beforeCreateSideBarItems, ignoreList = [] } = option;
   const rawNode = readdirSync(join(targetPath, ...reset));
   const node = beforeCreateSideBarItems?.(rawNode) ?? rawNode;
   if (ignoreIndexItem && node.length === 1 && node[0] === 'index.md') {
@@ -21,6 +21,9 @@ function createSideBarItems (
   const result: DefaultTheme.SidebarItem[] = [];
   for (const fname of node) {
     if (statSync(join(targetPath, ...reset, fname)).isDirectory()) {
+      if (ignoreList.includes(fname)) {
+        continue;
+      }
       // is directory
       // ignore cur node if items length is 0
       const items = createSideBarItems(
