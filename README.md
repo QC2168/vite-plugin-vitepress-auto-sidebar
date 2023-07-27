@@ -65,7 +65,7 @@ export default defineConfig({
 | sideBarResolved          | receive complete sidebar objects for custom modifications                                                                                         | `(data: DefaultTheme.SidebarMulti) => DefaultTheme.SidebarMulti`   |         |
 | sideBarItemsResolved     | receive complete sidebar subItem objects for custom modifications                                                                                 | `(data: DefaultTheme.SidebarItem[]) => DefaultTheme.SidebarItem[]` |         |
 | beforeCreateSideBarItems | obtain a list of file names scanned before generating sidebar subitems. If you want to sort sidebar data, it is recommended to use it             | `(data: string[]) => string[]`                                     |         |
-| titleFromFile            | read title from md file                                                                                                                           |                                                                    |         |
+| titleFromFile            | read title from md file                                                                                                                           | `boolean`                                                          | `false` |
 
 ## License
 
