@@ -1,37 +1,12 @@
 import { join } from 'path';
-import { existsSync, readdirSync, readFileSync, statSync } from 'fs';
+import { readdirSync, statSync } from 'fs';
 import { type DefaultTheme } from 'vitepress';
 import { type Plugin, type ViteDevServer } from 'vite';
 import type { SidebarPluginOptionType, UserConfig } from './types';
 
-import { DEFAULT_IGNORE_FOLDER, log, removePrefix } from './utils';
+import { DEFAULT_IGNORE_FOLDER, log, removePrefix, getTitleFromFile } from './utils';
 
 let option: SidebarPluginOptionType;
-
-// 尝试从一个md文件中读取标题，读取到第一个 ‘# 标题内容’ 的时候返回这一行
-function getTitleFromFile (realFileName: string): string | undefined {
-  if (!existsSync(realFileName)) {
-    return undefined;
-  }
-  const fileExtension = realFileName.substring(
-    realFileName.lastIndexOf('.') + 1
-  );
-  if (fileExtension !== 'md' && fileExtension !== 'MD') {
-    return undefined;
-  }
-  // read contents of the file
-  const data = readFileSync(realFileName, { encoding: 'utf-8' });
-  // split the contents by new line
-  const lines = data.split(/\r?\n/);
-  // print all lines
-  for (let index = 0; index < lines.length; index++) {
-    const line = lines[index];
-    if (line.includes('# ')) {
-      return line.replace('# ', '');
-    }
-  }
-  return undefined;
-}
 
 function createSideBarItems (
   targetPath: string,
@@ -63,17 +38,19 @@ function createSideBarItems (
       const items = createSideBarItems(join(targetPath), ...reset, fname);
       // replace directory name, if yes
       let text = fname;
-      // 读取文件夹根目录的index.md中的标题,作为文件夹的标题
+      // get the title in index.md file
       if (titleFromFile) {
-        const title1 = getTitleFromFile(join(currentDir, fname, 'index.md'));
-        const title2 = getTitleFromFile(join(currentDir, fname, 'index.MD'));
-        const title3 = getTitleFromFile(join(currentDir, fname, fname + '.md'));
-        if (title1) {
-          text = title1;
-        } else if (title2) {
-          text = title2;
-        } else if (title3) {
-          text = title3;
+        const filenames = [
+          join(currentDir, fname, 'index.md'),
+          join(currentDir, fname, 'index.MD'),
+          join(currentDir, fname, fname + '.md')
+        ];
+        for (const filename of filenames) {
+          const title = getTitleFromFile(filename);
+          if (title) {
+            text = title;
+            break;
+          }
         }
       }
       if (deletePrefix) {
