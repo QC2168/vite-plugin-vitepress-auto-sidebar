@@ -126,9 +126,11 @@ function createSidebarMulti (path: string): DefaultTheme.SidebarMulti {
   if (ignoreIndexItem) {
     for (const i in data) {
       let obj = data[i];
-      obj = obj.filter((i) => i.items != null && i.items.length > 0);
-      if (obj.length === 0) {
-        Reflect.deleteProperty(data, i);
+      if (Array.isArray(obj)) {
+        obj = obj.filter((i) => i.items != null && i.items.length > 0);
+        if (obj.length === 0) {
+          Reflect.deleteProperty(data, i);
+        }
       }
     }
   }
