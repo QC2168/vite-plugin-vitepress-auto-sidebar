@@ -73,6 +73,6 @@
   },
   "peerDependencies": {
     "vite": "^5.0.10",
-    "vitepress": "1.0.0-rc.33"
+    "vitepress": "^1.0.0-rc.33"
   }
 }
