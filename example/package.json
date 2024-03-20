@@ -13,7 +13,6 @@
   "license": "MIT",
   "dependencies": {
     "vite-plugin-vitepress-auto-sidebar": "../",
-    "vitepress": "latest",
-    "vue": "^3.2.45"
+    "vitepress": "latest"
   }
 }
