@@ -1,6 +1,6 @@
 import type { DefaultTheme, SiteConfig } from 'vitepress';
 export interface SidebarPluginOptionType {
-  ignoreList?: string[]
+  ignoreList?: Array<RegExp | string>
   path?: string
   createIndex?: boolean
   ignoreIndexItem?: boolean
