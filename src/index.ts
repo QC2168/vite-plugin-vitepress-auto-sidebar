@@ -70,7 +70,8 @@ function createSideBarItems (
       if (
         (ignoreIndexItem && fname === 'index.md') ||
         /^-.*\.(md|MD)$/.test(fname) ||
-        ignoreList.some(item => item === fname || (item instanceof RegExp && item.test(fname)))
+        ignoreList.some(item => item === fname || (item instanceof RegExp && item.test(fname))) ||
+        !fname.endsWith('.md')
       ) {
         continue;
       }
