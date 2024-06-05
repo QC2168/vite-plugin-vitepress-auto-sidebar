@@ -15,7 +15,7 @@ function createSideBarItems (
   const {
     ignoreIndexItem,
     deletePrefix,
-    collapsed = false,
+    collapsed,
     sideBarItemsResolved,
     beforeCreateSideBarItems,
     ignoreList = [],
