@@ -15,7 +15,7 @@ function createSideBarItems (
   const {
     ignoreIndexItem,
     deletePrefix,
-    collapsed = false,
+    collapsed,
     sideBarItemsResolved,
     beforeCreateSideBarItems,
     ignoreList = [],
@@ -30,7 +30,7 @@ function createSideBarItems (
   const result: DefaultTheme.SidebarItem[] = [];
   for (const fname of node) {
     if (statSync(join(targetPath, ...reset, fname)).isDirectory()) {
-      if (ignoreList.includes(fname)) {
+      if (ignoreList.some(item => item === fname || (item instanceof RegExp && item.test(fname)))) {
         continue;
       }
       // is directory
@@ -69,7 +69,9 @@ function createSideBarItems (
       // is filed
       if (
         (ignoreIndexItem && fname === 'index.md') ||
-        /^-.*\.(md|MD)$/.test(fname)
+        /^-.*\.(md|MD)$/.test(fname) ||
+        ignoreList.some(item => item === fname || (item instanceof RegExp && item.test(fname))) ||
+        !fname.endsWith('.md')
       ) {
         continue;
       }
