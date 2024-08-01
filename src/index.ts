@@ -1,6 +1,6 @@
 import { join } from 'path';
 import { readdirSync, statSync } from 'fs';
-import { type DefaultTheme } from 'vitepress';
+import { type DefaultTheme } from 'vitepress/theme';
 import { type Plugin, type ViteDevServer } from 'vite';
 import type { SidebarPluginOptionType, UserConfig } from './types';
 
@@ -8,12 +8,11 @@ import { DEFAULT_IGNORE_FOLDER, log, removePrefix, getTitleFromFile, getTitleFro
 
 let option: SidebarPluginOptionType;
 
-
-function extractTitleFn({ titleFromFile = false, titleFromFileByYaml = false }) {
+function extractTitleFn({ titleFromFile = false, titleFromFileByYaml = false }): ((file: string) => string | undefined) | undefined {
   if (titleFromFile) {
-    return getTitleFromFile
+    return getTitleFromFile;
   } else if (titleFromFileByYaml) {
-    return getTitleFromFileByYaml
+    return getTitleFromFileByYaml;
   }
   return undefined;
 }
@@ -38,7 +37,8 @@ function createSideBarItems(
     return [];
   }
   const result: DefaultTheme.SidebarItem[] = [];
-  const exec = extractTitleFn({ titleFromFile, titleFromFileByYaml })
+
+  const exec = extractTitleFn({ titleFromFile, titleFromFileByYaml });
   for (const fname of node) {
     if (statSync(join(targetPath, ...reset, fname)).isDirectory()) {
       if (ignoreList.some(item => item === fname || (item instanceof RegExp && item.test(fname)))) {
