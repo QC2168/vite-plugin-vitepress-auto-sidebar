@@ -56,7 +56,7 @@ export default defineConfig({
 ### 🛠️ Options
 
 | name                     | description                                                                                                                                       | type                                                               | default |
-|--------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------|---------|
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ | ------- |
 | ignoreList               | ignore specified folder                                                                                                                           | `string[]`                                                         | `true`  |
 | path                     | create scan path for the sidebar                                                                                                                  | `string`                                                           | `/docs` |
 | ignoreIndexItem          | ignore the page sidebar with only index.md                                                                                                        | `boolean`                                                          | `false` |
@@ -66,6 +66,7 @@ export default defineConfig({
 | sideBarItemsResolved     | receive complete sidebar subItem objects for custom modifications                                                                                 | `(data: DefaultTheme.SidebarItem[]) => DefaultTheme.SidebarItem[]` |         |
 | beforeCreateSideBarItems | obtain a list of file names scanned before generating sidebar subitems. If you want to sort sidebar data, it is recommended to use it             | `(data: string[]) => string[]`                                     |         |
 | titleFromFile            | read title from md file                                                                                                                           | `boolean`                                                          | `false` |
+| titleFromFileByYaml            | read title from yaml config                                                                                                                           | `boolean`                                                          | `false` |
 
 ## License
 
