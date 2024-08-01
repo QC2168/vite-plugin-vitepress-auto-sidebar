@@ -4,11 +4,20 @@ import { type DefaultTheme } from 'vitepress';
 import { type Plugin, type ViteDevServer } from 'vite';
 import type { SidebarPluginOptionType, UserConfig } from './types';
 
-import { DEFAULT_IGNORE_FOLDER, log, removePrefix, getTitleFromFile } from './utils';
+import { DEFAULT_IGNORE_FOLDER, log, removePrefix, getTitleFromFile, getTitleFromFileByYaml } from './utils';
 
 let option: SidebarPluginOptionType;
 
-function createSideBarItems (
+
+function extractTitleFn({ titleFromFile = false, titleFromFileByYaml = false }) {
+  if (titleFromFile) {
+    return getTitleFromFile
+  } else if (titleFromFileByYaml) {
+    return getTitleFromFileByYaml
+  }
+  return undefined;
+}
+function createSideBarItems(
   targetPath: string,
   ...reset: string[]
 ): DefaultTheme.SidebarItem[] {
@@ -19,7 +28,8 @@ function createSideBarItems (
     sideBarItemsResolved,
     beforeCreateSideBarItems,
     ignoreList = [],
-    titleFromFile = false
+    titleFromFile = false,
+    titleFromFileByYaml = false
   } = option;
   const rawNode = readdirSync(join(targetPath, ...reset));
   const node = beforeCreateSideBarItems?.(rawNode) ?? rawNode;
@@ -28,6 +38,7 @@ function createSideBarItems (
     return [];
   }
   const result: DefaultTheme.SidebarItem[] = [];
+  const exec = extractTitleFn({ titleFromFile, titleFromFileByYaml })
   for (const fname of node) {
     if (statSync(join(targetPath, ...reset, fname)).isDirectory()) {
       if (ignoreList.some(item => item === fname || (item instanceof RegExp && item.test(fname)))) {
@@ -39,14 +50,15 @@ function createSideBarItems (
       // replace directory name, if yes
       let text = fname;
       // get the title in index.md file
-      if (titleFromFile) {
+      if (exec) {
         const filenames = [
           join(currentDir, fname, 'index.md'),
           join(currentDir, fname, 'index.MD'),
           join(currentDir, fname, fname + '.md')
         ];
+
         for (const filename of filenames) {
-          const title = getTitleFromFile(filename);
+          const title = exec(filename);
           if (title) {
             text = title;
             break;
@@ -81,8 +93,8 @@ function createSideBarItems (
         text = removePrefix(text, deletePrefix);
       }
       const realFileName = join(currentDir, fname);
-      if (titleFromFile) {
-        const title = getTitleFromFile(realFileName);
+      if (exec) {
+        const title = exec(realFileName);
         if (title) {
           text = title;
         }
@@ -97,7 +109,7 @@ function createSideBarItems (
   return sideBarItemsResolved?.(result) ?? result;
 }
 
-function createSideBarGroups (
+function createSideBarGroups(
   targetPath: string,
   folder: string
 ): DefaultTheme.SidebarItem[] {
@@ -108,7 +120,7 @@ function createSideBarGroups (
   ];
 }
 
-function createSidebarMulti (path: string): DefaultTheme.SidebarMulti {
+function createSidebarMulti(path: string): DefaultTheme.SidebarMulti {
   const {
     ignoreList = [],
     ignoreIndexItem = false,
@@ -140,12 +152,12 @@ function createSidebarMulti (path: string): DefaultTheme.SidebarMulti {
   return sideBarResolved?.(data) ?? data;
 }
 
-export default function VitePluginVitePressAutoSidebar (
+export default function VitePluginVitePressAutoSidebar(
   opt: SidebarPluginOptionType = {}
 ): Plugin {
   return {
     name: 'vite-plugin-vitepress-auto-sidebar',
-    configureServer ({
+    configureServer({
       watcher,
       restart
     }: ViteDevServer) {
@@ -163,7 +175,7 @@ export default function VitePluginVitePressAutoSidebar (
         }
       });
     },
-    config (config) {
+    config(config) {
       option = opt;
       const { path = '/docs' } = option;
       // increment ignore item

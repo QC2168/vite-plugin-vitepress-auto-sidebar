@@ -69,6 +69,7 @@
   },
   "dependencies": {
     "@typescript-eslint/parser": "^5.59.2",
+    "front-matter": "^4.0.2",
     "picocolors": "^1.0.0"
   },
   "peerDependencies": {
