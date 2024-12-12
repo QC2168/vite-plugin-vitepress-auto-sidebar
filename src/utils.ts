@@ -48,6 +48,6 @@ export function getTitleFromFileByYaml (realFileName: string): string | undefine
   // read contents of the file
   const data = readFileSync(realFileName, { encoding: 'utf-8' });
   // get yaml frontmatter
-  const content = fm(data);
-  return (content.attributes as Record<string, string>)?.title || undefined;
+  const content = fm<Record<string, string>>(data);
+  return content.attributes?.title || undefined;
 }

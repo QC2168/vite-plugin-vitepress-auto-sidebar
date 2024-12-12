@@ -1,7 +1,7 @@
 import { join } from 'path';
 import { readdirSync, statSync } from 'fs';
-import { type DefaultTheme } from 'vitepress/theme';
-import { type Plugin, type ViteDevServer } from 'vite';
+import type { DefaultTheme } from 'vitepress/theme';
+import type { Plugin, ViteDevServer } from 'vite';
 import type { SidebarPluginOptionType, UserConfig } from './types';
 
 import { DEFAULT_IGNORE_FOLDER, log, removePrefix, getTitleFromFile, getTitleFromFileByYaml } from './utils';
@@ -139,6 +139,7 @@ function createSidebarMulti(path: string): DefaultTheme.SidebarMulti {
   // is ignored only index.md
   if (ignoreIndexItem) {
     for (const i in data) {
+      // eslint-disable-next-line @typescript-eslint/prefer-destructuring
       let obj = data[i];
       if (Array.isArray(obj)) {
         obj = obj.filter((i) => i.items != null && i.items.length > 0);
@@ -181,7 +182,9 @@ export default function VitePluginVitePressAutoSidebar(
       // increment ignore item
       const docsPath = join(process.cwd(), path);
       // create sidebar data and insert
-      (config as UserConfig).vitepress.site.themeConfig.sidebar =
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion, @typescript-eslint/prefer-destructuring
+      const {themeConfig} = (config as UserConfig).vitepress.site;
+      themeConfig.sidebar =
         createSidebarMulti(docsPath);
       log('injected sidebar data successfully');
       return config;
