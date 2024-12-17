@@ -4,18 +4,11 @@ import type { DefaultTheme } from 'vitepress/theme';
 import type { Plugin, ViteDevServer } from 'vite';
 import type { SidebarPluginOptionType, UserConfig } from './types';
 
-import { DEFAULT_IGNORE_FOLDER, log, removePrefix, getTitleFromFile, getTitleFromFileByYaml } from './utils';
+import { DEFAULT_IGNORE_FOLDER, log, removePrefix, extractTitleFn } from './utils';
 
 let option: SidebarPluginOptionType;
 
-function extractTitleFn({ titleFromFile = false, titleFromFileByYaml = false }): ((file: string) => string | undefined) | undefined {
-  if (titleFromFile) {
-    return getTitleFromFile;
-  } else if (titleFromFileByYaml) {
-    return getTitleFromFileByYaml;
-  }
-  return undefined;
-}
+
 function createSideBarItems(
   targetPath: string,
   ...reset: string[]
@@ -183,7 +176,7 @@ export default function VitePluginVitePressAutoSidebar(
       const docsPath = join(process.cwd(), path);
       // create sidebar data and insert
       // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion, @typescript-eslint/prefer-destructuring
-      const {themeConfig} = (config as UserConfig).vitepress.site;
+      const { themeConfig } = (config as UserConfig).vitepress.site;
       themeConfig.sidebar =
         createSidebarMulti(docsPath);
       log('injected sidebar data successfully');
