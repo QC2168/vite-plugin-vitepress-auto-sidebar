@@ -55,6 +55,8 @@ export default defineConfig({
 
 ### 🛠️ Options
 
+#### Parameters
+
 | name                     | description                                                                                                                                       | type                                                               | default |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ | ------- |
 | ignoreList               | ignore specified folder                                                                                                                           | `string[]`                                                         | `true`  |
@@ -62,11 +64,18 @@ export default defineConfig({
 | ignoreIndexItem          | ignore the page sidebar with only index.md                                                                                                        | `boolean`                                                          | `false` |
 | collapsed                | By adding collapsed option to the sidebar group, it shows a toggle button to hide/show each section,For specific usage, please refer to VitePress | `boolean`                                                          | `false` |
 | deletePrefix             | deletes the md file prefix                                                                                                                        | `string`                                                           |         |
+| titleFromFile            | read title from md file                                                                                                                           | `boolean`                                                          | `false` |
+| titleFromFileByYaml      | read title from yaml config                                                                                                                       | `boolean`                                                          | `false` |
+
+### Hooks
+
+You can change the injected sidebar object using the hooks parameter
+
+| name                     | description                                                                                                                                       | type                                                               | default |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ | ------- |
 | sideBarResolved          | receive complete sidebar objects for custom modifications                                                                                         | `(data: DefaultTheme.SidebarMulti) => DefaultTheme.SidebarMulti`   |         |
 | sideBarItemsResolved     | receive complete sidebar subItem objects for custom modifications                                                                                 | `(data: DefaultTheme.SidebarItem[]) => DefaultTheme.SidebarItem[]` |         |
 | beforeCreateSideBarItems | obtain a list of file names scanned before generating sidebar subitems. If you want to sort sidebar data, it is recommended to use it             | `(data: string[]) => string[]`                                     |         |
-| titleFromFile            | read title from md file                                                                                                                           | `boolean`                                                          | `false` |
-| titleFromFileByYaml            | read title from yaml config                                                                                                                           | `boolean`                                                          | `false` |
 
 ## License
 
