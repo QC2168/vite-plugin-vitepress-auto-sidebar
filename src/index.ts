@@ -11,7 +11,8 @@ let option: SidebarPluginOptionType;
 
 function createSideBarItems(
   targetPath: string,
-  ...reset: string[]
+  path: string[],
+  recursive = true
 ): DefaultTheme.SidebarItem[] {
   const {
     ignoreIndexItem,
@@ -21,11 +22,11 @@ function createSideBarItems(
     beforeCreateSideBarItems,
     ignoreList = [],
     titleFromFile = false,
-    titleFromFileByYaml = false
+    titleFromFileByYaml = false,
   } = option;
-  const rawNode = readdirSync(join(targetPath, ...reset));
+  const rawNode = readdirSync(join(targetPath, ...path));
   const node = beforeCreateSideBarItems?.(rawNode) ?? rawNode;
-  const currentDir = join(targetPath, ...reset);
+  const currentDir = join(targetPath, ...path);
   if (ignoreIndexItem && node.length === 1 && node[0] === 'index.md') {
     return [];
   }
@@ -33,13 +34,13 @@ function createSideBarItems(
 
   const exec = extractTitleFn({ titleFromFile, titleFromFileByYaml });
   for (const fname of node) {
-    if (statSync(join(targetPath, ...reset, fname)).isDirectory()) {
+    if (recursive && statSync(join(targetPath, ...path, fname)).isDirectory()) {
       if (ignoreList.some(item => item === fname || (item instanceof RegExp && item.test(fname)))) {
         continue;
       }
       // is directory
       // ignore cur node if items length is 0
-      const items = createSideBarItems(join(targetPath), ...reset, fname);
+      const items = createSideBarItems(join(targetPath), [...path, fname]);
       // replace directory name, if yes
       let text = fname;
       // get the title in index.md file
@@ -94,7 +95,7 @@ function createSideBarItems(
       }
       const item: DefaultTheme.SidebarItem = {
         text,
-        link: '/' + [...reset, `${fileName}.html`].join('/')
+        link: '/' + [...path.filter(Boolean), `${fileName}.html`].join('/')
       };
       result.push(item);
     }
@@ -104,11 +105,12 @@ function createSideBarItems(
 
 function createSideBarGroups(
   targetPath: string,
-  folder: string
+  folder: string,
+  recursive = true
 ): DefaultTheme.SidebarItem[] {
   return [
     {
-      items: createSideBarItems(targetPath, folder)
+      items: createSideBarItems(targetPath, [folder], recursive)
     }
   ];
 }
@@ -117,13 +119,19 @@ function createSidebarMulti(path: string): DefaultTheme.SidebarMulti {
   const {
     ignoreList = [],
     ignoreIndexItem = false,
-    sideBarResolved
+    sideBarResolved,
+    scanRootMdFiles = true
   } = option;
   const il = [...DEFAULT_IGNORE_FOLDER, ...ignoreList];
   const data: DefaultTheme.SidebarMulti = {};
   const node = readdirSync(path).filter(
     (n) => statSync(join(path, n)).isDirectory() && !il.includes(n)
   );
+
+  // all md in root
+  if (scanRootMdFiles) {
+    data['/'] = createSideBarGroups(path, '', false);
+  }
 
   for (const k of node) {
     data[`/${k}/`] = createSideBarGroups(path, k);
