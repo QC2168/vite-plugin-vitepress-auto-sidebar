@@ -9,10 +9,12 @@ export interface SidebarPluginOptionType {
   // 是否从文件获取sidebar标题，默认是否
   titleFromFile?: boolean
   titleFromFileByYaml?: boolean
+  indexAliasFromFile?: boolean
   scanRootMdFiles?: boolean
   sideBarResolved?: (data: DefaultTheme.SidebarMulti) => DefaultTheme.SidebarMulti
   sideBarItemsResolved?: (data: DefaultTheme.SidebarItem[]) => DefaultTheme.SidebarItem[]
   beforeCreateSideBarItems?: (data: string[]) => string[]
+  indexFileUseTitleName?: boolean
 }
 export interface UserConfig {
   vitepress: SiteConfig

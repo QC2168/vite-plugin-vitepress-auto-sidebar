@@ -1,4 +1,4 @@
-# vite-plugin-vitepress-auto-sidebar 
+# vite-plugin-vitepress-auto-sidebar
 ## Demo
 
 ### 简体中文

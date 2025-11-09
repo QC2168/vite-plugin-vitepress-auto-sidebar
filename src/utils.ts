@@ -38,6 +38,10 @@ export function getTitleFromFile(realFileName: string): string | undefined {
 
 // obtain title form yaml frontmatter
 export function getTitleFromFileByYaml(realFileName: string): string | undefined {
+  return getAttributeFromFileByYaml(realFileName, "title")
+}
+
+export function getAttributeFromFileByYaml(realFileName: string, attribute: string): string | undefined {
   if (!existsSync(realFileName)) {
     return undefined;
   }
@@ -49,7 +53,7 @@ export function getTitleFromFileByYaml(realFileName: string): string | undefined
   const data = readFileSync(realFileName, { encoding: 'utf-8' });
   // get yaml frontmatter
   const content = fm<Record<string, string>>(data);
-  return content.attributes?.title || undefined;
+  return content.attributes[attribute] || undefined; // ??
 }
 
 // obtain title from file

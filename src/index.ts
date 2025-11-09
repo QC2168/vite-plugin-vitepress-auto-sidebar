@@ -4,7 +4,7 @@ import type { DefaultTheme } from 'vitepress/theme';
 import type { Plugin, ViteDevServer } from 'vite';
 import type { SidebarPluginOptionType, UserConfig } from './types';
 
-import { DEFAULT_IGNORE_FOLDER, log, removePrefix, extractTitleFn } from './utils';
+import { DEFAULT_IGNORE_FOLDER, log, removePrefix, extractTitleFn, getAttributeFromFileByYaml, getTitleFromFile } from './utils';
 
 let option: SidebarPluginOptionType;
 
@@ -23,9 +23,12 @@ function createSideBarItems(
     ignoreList = [],
     titleFromFile = false,
     titleFromFileByYaml = false,
+    indexAliasFromFile = false,
+    indexFileUseTitleName = false
   } = option;
   const rawNode = readdirSync(join(targetPath, ...path));
   const node = beforeCreateSideBarItems?.(rawNode) ?? rawNode;
+
   const currentDir = join(targetPath, ...path);
   if (ignoreIndexItem && node.length === 1 && node[0] === 'index.md') {
     return [];
@@ -34,6 +37,7 @@ function createSideBarItems(
 
   const exec = extractTitleFn({ titleFromFile, titleFromFileByYaml });
   for (const fname of node) {
+    const fullPath = join(targetPath, ...path, fname); // 
     if (recursive && statSync(join(targetPath, ...path, fname)).isDirectory()) {
       if (ignoreList.some(item => item === fname || (item instanceof RegExp && item.test(fname)))) {
         continue;
@@ -59,8 +63,24 @@ function createSideBarItems(
           }
         }
       }
+
       if (deletePrefix) {
         text = removePrefix(text, deletePrefix);
+      }
+      if (indexAliasFromFile) {
+        try {
+          let ptrn = join(fullPath, "index.md");
+          if (!statSync(ptrn).isFile()) ptrn = join(fullPath, "index.MD");
+          statSync(ptrn).isFile();
+          let frontmatterAlias = getAttributeFromFileByYaml(ptrn, "alias");
+          if (frontmatterAlias) text = frontmatterAlias;
+          else {
+            let h1 = getTitleFromFile(ptrn);
+            if (h1) text = h1;
+          }
+        } catch (e: any) {
+          // no alias found, skip
+        }
       }
       if (items.length > 0) {
         const sidebarItem: DefaultTheme.SidebarItem = {
@@ -73,8 +93,9 @@ function createSideBarItems(
       }
     } else {
       // is filed
+
       if (
-        (ignoreIndexItem && fname === 'index.md') ||
+        (ignoreIndexItem && fname.toLowerCase() === 'index.md' && !indexFileUseTitleName) ||
         /^-.*\.(md|MD)$/.test(fname) ||
         ignoreList.some(item => item === fname || (item instanceof RegExp && item.test(fname))) ||
         !fname.endsWith('.md')
@@ -92,6 +113,10 @@ function createSideBarItems(
         if (title) {
           text = title;
         }
+      }
+      if (fname.toLowerCase() === "index.md" && indexFileUseTitleName) {
+        let chkText = getTitleFromFile(realFileName);
+        if (chkText) text = chkText;
       }
       const item: DefaultTheme.SidebarItem = {
         text,
@@ -115,7 +140,7 @@ function createSideBarGroups(
   ];
 }
 
-function createSidebarMulti(path: string): DefaultTheme.SidebarMulti {
+async function createSidebarMulti(path: string): Promise<DefaultTheme.SidebarMulti> {
   const {
     ignoreList = [],
     ignoreIndexItem = false,
@@ -166,7 +191,7 @@ export default function VitePluginVitePressAutoSidebar(
       const fsWatcher = watcher.add('*.md');
       fsWatcher.on('all', async (event, path) => {
         if (event !== 'change') {
-          log(`${event} ${path}`);
+          log(`${new Date()} :: ${event} ${path}`);
           try {
             await restart();
             log('update sidebar...');
@@ -177,7 +202,7 @@ export default function VitePluginVitePressAutoSidebar(
         }
       });
     },
-    config(config) {
+    async config(config) {
       option = opt;
       const { path = '/docs' } = option;
       // increment ignore item
@@ -186,7 +211,7 @@ export default function VitePluginVitePressAutoSidebar(
       // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion, @typescript-eslint/prefer-destructuring
       const { themeConfig } = (config as UserConfig).vitepress.site;
       themeConfig.sidebar =
-        createSidebarMulti(docsPath);
+        await createSidebarMulti(docsPath);
       log('injected sidebar data successfully');
       return config;
     }

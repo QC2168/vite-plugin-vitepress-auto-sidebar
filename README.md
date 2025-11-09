@@ -67,6 +67,22 @@ export default defineConfig({
 | deletePrefix             | deletes the md file prefix                                                                                                                        | `string`                                                           |         |
 | titleFromFile            | read title from md file                                                                                                                           | `boolean`                                                          | `false` |
 | titleFromFileByYaml      | read title from yaml config                                                                                                                       | `boolean`                                                          | `false` |
+| indexAliasFromFile      | read sidebar-stack alias name from index.md                                                                                                                        | `boolean`                                                          | `false` |
+| indexFileUseTitleName      | let index.md use its title as name in sidebar or not.                                                                                                                         | `boolean`                                                          | `false` |
+
+##### Tips: about indexAliasFromFile
+This tries to get value of `alias` from frontmatter of `index.md`. If not presented, uses first `h1` headline as alias. If also not presented, skip alias.
+
+A valid frontmatter for alias should like:
+`````md
+---
+#...other attributes
+alias: Example
+---
+`````
+
+##### Tips: about indexFileUseTitleName
+If true, will override `ignoreIndexItem` as false.
 
 #### Hooks
 

@@ -1,0 +1,5 @@
+---
+alias: AAA
+---
+# Index
+hohoho
